@@ -18,11 +18,21 @@
       padding: 15px;
       width: 200px;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       position: relative;
     }
     .card img {
       width: 100%;
       border-radius: 10px;
+    }
+    .delete-btn {
+        margin-top: 10px;
+        background-color: red;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
     }
   </style>
 </head>
@@ -115,7 +125,7 @@
     </header>
     <div class="container w-100% pt-5 m-auto">
         <div class="container-content max-w-[1250px] m-auto">
-            <h2>❤️ Like qilingan mahsulotlar</h2>
+            <h2> Like qilingan mahsulotlar</h2>
             <div id="liked-cards" style="display: flex; flex-wrap: wrap; gap: 20px;"></div>
 
         </div>
@@ -203,7 +213,6 @@
  const API_URL = "https://690698b2b1879c890ed7a4e7.mockapi.io/pa1/user";
     const container = document.getElementById('liked-cards');
 
-    // API dan ma’lumot olish va like bosilganlarini chiqarish
     async function getData() {
       try {
         const res = await fetch(API_URL);
@@ -216,16 +225,15 @@
 
       } catch (err) {
         console.error("Xatolik:", err);
-        container.innerHTML = "<p class='empty'>Xatolik yuz berdi, keyinroq urinib ko‘ring 😔</p>";
+        container.innerHTML = "<p class='empty'>Xatolik yuz berdi, keyinroq urinib ko‘ring </p>";
       }
     }
 
-    // Cardlarni chiqarish
     function renderLikedCards(likedProducts) {
       container.innerHTML = "";
 
       if (likedProducts.length === 0) {
-        container.innerHTML = "<p class='empty'>Hech qanday like bosilgan mahsulot yo‘q 😔</p>";
+        container.innerHTML = "<p class='empty'>Hech qanday like bosilgan mahsulot yo‘q </p>";
         return;
       }
 
@@ -243,7 +251,6 @@
         container.appendChild(card);
       });
 
-      // O‘chirish tugmasi ishlashi
       const deleteBtns = document.querySelectorAll(".delete-btn");
       deleteBtns.forEach(btn => {
         btn.addEventListener("click", (e) => {
@@ -253,23 +260,19 @@
       });
     }
 
-    // LocalStorage'dan o‘chirish
     function removeFromLiked(id) {
       let liked = JSON.parse(localStorage.getItem("likedProducts")) || [];
       liked = liked.filter(x => x !== id);
       localStorage.setItem("likedProducts", JSON.stringify(liked));
 
-      // Cardni sahifadan olib tashlaymiz
       const card = document.querySelector(`.delete-btn[data-id="${id}"]`).closest(".card");
       card.remove();
 
-      // Agar hammasi o‘chgan bo‘lsa — xabar chiqarish
       if (liked.length === 0) {
-        container.innerHTML = "<p class='empty'>Hech qanday like bosilgan mahsulot yo‘q 😔</p>";
+        container.innerHTML = "<p class='empty'>Hech qanday like bosilgan mahsulot yo‘q </p>";
       }
     }
 
-    // Dastlab yuklash
     getData();
   </script>
 

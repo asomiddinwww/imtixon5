@@ -1,100 +1,61 @@
-//  const shopContainer = document.getElementById("shop-cards");
-//     const shopData = JSON.parse(localStorage.getItem("shop")) || [];
+const shopContainer = document.getElementById("shop-cards");
+let shopData = JSON.parse(localStorage.getItem("shop")) || [];
 
-//     if (shopData.length === 0) {
-//       shopContainer.innerHTML = "<p>Savat bo‘sh 😔</p>";
-//     } else {
-//       shopData.forEach(p => {
-//         const div = document.createElement("div");
-//         div.className = "card";
-//         div.innerHTML = `
-//           <img src="${p.img}" alt="${p.title}">
-//           <div>
-//             <h3>${p.title}</h3>
-//             <p>${Number(p.userPrice).toLocaleString()} so‘m</p>
-//           </div>
-//           <span>Miqdor: ${p.count}</span>
-//         `;
-//         shopContainer.appendChild(div);
-//       });
-//     }
+if (shopData.length === 0) {
+  shopContainer.innerHTML = "<p>malumot yoq</p>";
+} else {
+  shopData.forEach(p => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <div class="card-item flex rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+        <div class="flex flex-col justify-between space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
+          <a href="#" class="shrink-0 md:order-1">
+            <img class="hidden h-50 w-50 dark:block" src="${p.img}" alt="imac image" />
+          </a>
 
- const shopContainer = document.getElementById("shop-cards");
-    const shopData = JSON.parse(localStorage.getItem("shop")) || [];
-
-    if (shopData.length === 0) {
-      shopContainer.innerHTML = "<p class='text-gray-600 text-lg'>Savat bo‘sh 😔</p>";
-    } else {
-      shopData.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "card-item p-5 flex flex-col items-center justify-between h-105 shadow-xl bg-white rounded-xl hover:scale-[1.01] transition cursor-pointer";
-        div.innerHTML = `
-          <div class="card-item-img relative w-full flex items-center justify-center">
-            <div class="like absolute right-2 top-2 flex items-center justify-center">
-              <i class="fa-solid fa-trash text-xl text-red-500 cursor-pointer delete-btn" data-id="${p.id}"></i>
+          <div class="flex items-center justify-between md:order-3 md:justify-end">
+            <div class="flex items-center">
+              <button type="button" id="minus" class="text-white inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none dark:bg-gray-700">-</button>
+              <span id="number" class="pl-2 pr-2 text-white">${p.count}</span>
+              <button type="button" id="plus" class="text-white inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none dark:bg-gray-700">+</button>
             </div>
-            <img src="${p.img}" alt="${p.title}" class="rounded-xl w-[200px] h-[200px] object-cover">
-          </div>
-
-          <div class="card-item-text mt-4 text-center">
-            <p class="max-w-52 font-[600] text-[17px] pb-3 max-[610px]:text-[15px]">${p.title}</p>
-            <div class="narx flex items-center justify-between w-full">
-            <button id="plus">g+</button>
-            <span id="number"></span>
-            <button id="minus">g-</button>
-              <h3 class="font-bold text-[18px]" id="price">${(p.price).toLocaleString()} so‘m</h3>
-              <span class="text-gray-600 text-sm">Miqdor: ${p.count}</span>
+            <div class="text-end md:order-4 md:w-32">
+              <p class="text-base font-bold text-gray-900 dark:text-white">${p.price.toLocaleString()} so'm</p>
             </div>
           </div>
-        `;
-        shopContainer.appendChild(div);
-      });
-    }
 
-    // 🗑️ O‘chirish funksiyasi
-    document.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        const id = e.currentTarget.dataset.id;
-        let shopData = JSON.parse(localStorage.getItem("shop")) || [];
-        shopData = shopData.filter(item => item.id != id);
-        localStorage.setItem("shop", JSON.stringify(shopData));
-        e.currentTarget.closest(".card-item").remove();
-
-        if (shopData.length === 0) {
-          shopContainer.innerHTML = "<p class='text-gray-600 text-lg'>Savat bo‘sh 😔</p>";
-        }
-      });
-    });
-
-const pricePerItem = 4194000;
-
-const plus = document.getElementById("plus");
-const minus = document.getElementById("minus");
-const countEl = document.getElementById("number");
-const priceEl = document.getElementById("price");
-
-let savedData = JSON.parse(localStorage.getItem("cart")) || { count: 1, total: pricePerItem };
-
-let count = savedData.count;
-
-function updatePrice() {
-    const total = count * pricePerItem;
-    priceEl.textContent = total.toLocaleString("uz-UZ") + " so'm";
-    countEl.textContent = count;
-
-    localStorage.setItem("cart", JSON.stringify({ count: count, total: total }));
+          <div class="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
+            <span class="text-base font-medium text-gray-900 hover:underline dark:text-white">${p.title}</span>
+            <div class="flex items-center gap-4">
+              <!-- ❗️data-id atributini qo‘shdik -->
+              <button type="button" data-id="${p.id}" class="delete-btn inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500">
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    shopContainer.appendChild(div);
+  });
 }
 
-plus.addEventListener("click", () => {
-    count++;
-    updatePrice();
-});
+document.querySelectorAll(".delete-btn").forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    const id = e.currentTarget.dataset.id; 
 
-minus.addEventListener("click", () => {
-    if (count > 1) {
-        count--;
-        updatePrice();
+    let shopData = JSON.parse(localStorage.getItem("shop")) || [];
+
+    const newData = shopData.filter(item => String(item.id) !== String(id));
+
+    localStorage.setItem("shop", JSON.stringify(newData));
+
+    e.currentTarget.closest(".card-item").remove();
+
+    if (newData.length === 0) {
+      shopContainer.innerHTML = "<p>malumot yoq</p>";
     }
-});
 
-updatePrice();
+    console.log(`Mahsulot ID ${id} o‘chirildi. Qolganlar:`, newData);
+  });
+});

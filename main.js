@@ -1,4 +1,3 @@
-// === Menyu boshqaruvi === //
 const menuRemov = document.querySelector('#x');
 const menuBtn = document.querySelector('#hum');
 const menu = document.querySelector('#menus');
@@ -15,7 +14,6 @@ menuRemov.addEventListener('click', (e) => {
   menu.style.display = 'none';
 });
 
-// === Swiper === //
 var swiper = new Swiper(".mySwiper", {
   navigation: {
     nextEl: ".swiper-button-next",
@@ -23,7 +21,6 @@ var swiper = new Swiper(".mySwiper", {
   },
 });
 
-// === Scroll animatsiyasi === //
 (function () {
   const box = document.getElementById('box');
   let lastScrollY = window.scrollY;
@@ -41,17 +38,14 @@ var swiper = new Swiper(".mySwiper", {
   }, { passive: true });
 })();
 
-// === Asosiy kod === //
 let cards = document.querySelector(".card-container");
 let shop = document.getElementById('shop');
 
-// API dan ma’lumot olish
 const getData = async (url) => {
   const res = await (await fetch(url)).json();
   return res;
 };
 
-// Like va Shop uchun localStorage
 let shop_data = JSON.parse(localStorage.getItem("shop")) || [];
 let liked_data = JSON.parse(localStorage.getItem("likedProducts")) || [];
 
@@ -87,7 +81,6 @@ function addUiData(data) {
     cards.append(div);
   });
 
-  // 🛍️ Savatga qo‘shish
 let btns = document.querySelectorAll(".shop-all");
 let shopfla = document.getElementById('shop-fl');
 
@@ -96,13 +89,10 @@ btns.forEach((button) => {
     const id = +e.currentTarget.id;
     const findData = data.find((value) => value.id == id);
 
-    // Shop indikatorni ko‘rsatish
     if (shopfla) shopfla.style.display = 'flex';
 
-    // LocalStorage’dan eski ma’lumotlarni olish
     let shop_data = JSON.parse(localStorage.getItem("shop")) || [];
 
-    // Agar oldin mavjud bo‘lsa, countni oshirish
     const existing = shop_data.find((item) => item.id == id);
     if (existing) {
       existing.count += 1;
@@ -111,17 +101,11 @@ btns.forEach((button) => {
       shop_data.push({ ...findData, count: 1, userPrice: findData.price });
     }
 
-    // LocalStorage’ni yangilash
     localStorage.setItem("shop", JSON.stringify(shop_data));
 
-    // 🔁 Shop sahifasiga yo‘naltirish
-    // setTimeout(() => {
-    //   window.location.href = "shop.html"; // yoki sizda qaysi nom bilan bo‘lsa
-    // }, 300);
   });
 });
 
-  // ❤️ Like bosish
   const likeBtns = document.querySelectorAll(".like-wh");
   likeBtns.forEach(btn => {
     btn.addEventListener("click", (e) => {
@@ -130,23 +114,19 @@ btns.forEach((button) => {
 
       if (liked.includes(id)) {
         liked = liked.filter(x => x !== id);
-        e.target.style.color = "#b9bcc0"; // oq yurak
+        e.target.style.color = "#b9bcc0";
       } else {
         liked.push(id);
-        e.target.style.color = "#ff0000"; // qizil yurak
+        e.target.style.color = "#ff0000";
       }
 
       localStorage.setItem("likedProducts", JSON.stringify(liked));
 
-      // Like bosilgandan keyin like sahifasiga o'tish
-      setTimeout(() => {
-        window.location.href = "/compain/like.html";
-      }, 400);
+     
     });
   });
 }
 
-// === Like sahifasi uchun === //
 function addLikedCards(data) {
   const likedIds = JSON.parse(localStorage.getItem("likedProducts")) || [];
   const likedProducts = data.filter(p => likedIds.includes(p.id));
@@ -156,7 +136,7 @@ function addLikedCards(data) {
 
   container.innerHTML = "";
   if (likedProducts.length === 0) {
-    container.innerHTML = "<p class='text-center text-gray-500'>Hech qanday like bosilgan mahsulot yo‘q 😔</p>";
+    container.innerHTML = "<p class='text-center text-gray-500'>Hech qanday like bosilgan mahsulot yo‘q </p>";
     return;
   }
 
