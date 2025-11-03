@@ -27,7 +27,6 @@ if (shopData.length === 0) {
           <div class="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
             <span class="text-base font-medium text-gray-900 hover:underline dark:text-white">${p.title}</span>
             <div class="flex items-center gap-4">
-              <!-- ❗️data-id atributini qo‘shdik -->
               <button type="button" data-id="${p.id}" class="delete-btn inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500">
                 Remove
               </button>
@@ -59,3 +58,67 @@ document.querySelectorAll(".delete-btn").forEach(btn => {
     console.log(`Mahsulot ID ${id} o‘chirildi. Qolganlar:`, newData);
   });
 });
+
+document.querySelectorAll("#plus").forEach(plusBtn => {
+  plusBtn.addEventListener("click", (e) => {
+    const card = e.currentTarget.closest(".card-item");
+    const countEl = card.querySelector("#number");
+    const priceEl = card.querySelector("p");
+    let count = parseInt(countEl.textContent);
+    let basePrice = parseInt(priceEl.textContent.replace(/\D/g, "")) / count; // asosiy narxni topamiz
+
+    count++;
+    countEl.textContent = count;
+    let newPrice = basePrice * count;
+    priceEl.textContent = `${newPrice.toLocaleString()} so'm`;
+
+    let shopData = JSON.parse(localStorage.getItem("shop")) || [];
+    const title = card.querySelector("span, h3, p").textContent.trim();
+    const item = shopData.find(el => el.title === title);
+    if (item) {
+      item.count = count;
+      item.userPrice = newPrice;
+      localStorage.setItem("shop", JSON.stringify(shopData));
+    }
+  });
+});
+
+document.querySelectorAll("#minus").forEach(minusBtn => {
+  minusBtn.addEventListener("click", (e) => {
+    const card = e.currentTarget.closest(".card-item");
+    const countEl = card.querySelector("#number");
+    const priceEl = card.querySelector("p");
+    let count = parseInt(countEl.textContent);
+    if (count <= 1) return; 
+
+    let basePrice = parseInt(priceEl.textContent.replace(/\D/g, "")) / count;
+
+    count--;
+    countEl.textContent = count;
+    let newPrice = basePrice * count;
+    priceEl.textContent = `${newPrice.toLocaleString()} so'm`;
+
+    let shopData = JSON.parse(localStorage.getItem("shop")) || [];
+    const title = card.querySelector("span, h3, p").textContent.trim();
+    const item = shopData.find(el => el.title === title);
+    if (item) {
+      item.count = count;
+      item.userPrice = newPrice;
+      localStorage.setItem("shop", JSON.stringify(shopData));
+    }
+  });
+});
+
+function updateTotal() {
+  const shopData = JSON.parse(localStorage.getItem("shop")) || [];
+  const total = shopData.reduce((sum, item) => sum + (item.userPrice || 0), 0);
+
+  const orignEl = document.querySelector(".orign");
+  if (orignEl) {
+    orignEl.textContent = `${total.toLocaleString()} so'm`;
+  }
+}
+localStorage.setItem("shop", JSON.stringify(shopData));
+
+updateTotal();
+
